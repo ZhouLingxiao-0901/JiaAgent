@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JiaAgent 佳</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232f6feb'/%3E%3Ctext x='16' y='23' font-size='19' text-anchor='middle' fill='%23fff' font-family='Microsoft YaHei,sans-serif'%3E%E4%BD%B3%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="app">
+
+    <!-- 左侧：会话列表 -->
+    <aside class="sidebar">
+      <div class="brand">JiaAgent <span class="brand-cn">佳</span></div>
+      <button id="new-chat" class="new-chat" type="button">+ 新对话</button>
+      <div class="session-list" id="session-list"></div>
+      <div class="status" id="status">正在连接后端...</div>
+    </aside>
+
+    <!-- 右侧：聊天区 -->
+    <main class="chat">
+      <header class="chat-header">
+        <div class="title" id="chat-title">新对话</div>
+        <div class="chat-header-right">
+          <button id="look-screen" class="ghost-btn" type="button"
+                  title="截一张图，看看佳现在能看到什么">看屏幕</button>
+          <button id="emergency-stop" class="danger-btn" type="button"
+                  title="立即停止真实鼠标输入；恢复需要显式确认">急停</button>
+          <select id="model-select" title="切换模型"></select>
+        </div>
+      </header>
+
+      <div class="messages" id="messages">
+        <div class="empty" id="empty-hint">
+          <h2>你好，我是佳</h2>
+          <p>你的本地 AI 助手。在下面输入一句话就能开始聊天。</p>
+        </div>
+      </div>
+
+      <form class="composer" id="composer">
+        <textarea id="input" rows="1"
+                  placeholder="输入消息，Enter 发送，Shift+Enter 换行"></textarea>
+        <button type="submit" id="send">发送</button>
+      </form>
+    </main>
+
+    <!-- 右侧：任务面板。平时不占地方，有任务时才显示 -->
+    <aside class="task-panel" id="task-panel" hidden>
+      <div class="task-panel-head">
+        <span>任务</span>
+        <span class="task-panel-hint">在聊天里说一句多步的活就会出现在这里</span>
+      </div>
+      <div class="task-list" id="task-list"></div>
+      <div class="task-detail" id="task-detail"></div>
+    </aside>
+
+  </div>
+  <!-- 屏幕预览（阶段 0）：只有你自己点「看屏幕」才会截图，截图不落盘 -->
+  <div class="vision-modal" id="vision-modal" hidden>
+    <div class="vision-dialog" role="dialog" aria-modal="true" aria-label="屏幕预览">
+      <div class="vision-head">
+        <span>屏幕预览</span>
+        <button id="vision-close" class="tool-btn" type="button">关闭</button>
+      </div>
+      <div class="vision-meta" id="vision-meta">正在截屏……</div>
+      <div class="vision-image-wrap">
+        <img id="vision-image" alt="屏幕预览">
+      </div>
+      <div class="vision-foot" id="vision-foot">阶段 0：只看，不动。</div>
+    </div>
+  </div>
+
+  <script src="/chat.js"></script>
+</body>
+</html>

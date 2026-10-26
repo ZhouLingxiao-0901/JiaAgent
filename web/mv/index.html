@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>刻在我心底的名字 · 像素样片 01</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <h1>刻在我心底的名字</h1>
+      <span class="badge">像素样片 01</span>
+    </div>
+    <div class="topbar-meta">
+      <span>静音时钟 · 40s</span>
+      <span class="dot" aria-hidden="true"></span>
+      <span>HTML5 Canvas 2D</span>
+    </div>
+  </header>
+
+  <main class="stage" id="stage">
+    <canvas id="screen" width="640" height="360" aria-label="《刻在我心底的名字》像素动画样片"></canvas>
+    <div id="loading" class="loading">正在装载像素素材…</div>
+  </main>
+
+  <section class="transport" aria-label="播放控制">
+    <div class="chapterbar" aria-hidden="true">
+      <div class="chapter ch-gate" style="flex: 8.5"><span>黄昏校园</span></div>
+      <div class="chapter ch-class" style="flex: 15"><span>教室初识</span></div>
+      <div class="chapter ch-night" style="flex: 16.5"><span>夜晚聊天</span></div>
+    </div>
+
+    <div class="controls">
+      <button id="play" class="btn primary" type="button">暂停</button>
+      <button id="replay" class="btn" type="button">重播</button>
+
+      <div class="scrub-wrap">
+        <input id="scrub" class="scrub" type="range" min="0" max="40" step="0.05" value="0" aria-label="时间轴">
+      </div>
+
+      <div class="timecode" aria-live="off">
+        <span id="time-now">00:00.0</span>
+        <span class="time-sep">/</span>
+        <span>00:40.0</span>
+      </div>
+
+      <button id="fs" class="btn" type="button">全屏</button>
+      <button id="debug-btn" class="btn" type="button" aria-pressed="false">调试</button>
+    </div>
+
+    <div class="hints">
+      <span><kbd>空格</kbd> 播放 / 暂停</span>
+      <span><kbd>←</kbd><kbd>→</kbd> 步进</span>
+      <span><kbd>R</kbd> 重播</span>
+      <span><kbd>D</kbd> 调试</span>
+      <span class="hint-end">静音样片：未加载任何外部音乐或素材</span>
+    </div>
+
+    <div id="debug" class="debug" hidden>
+      <div><span>时间</span><b id="d-time">0.000s</b></div>
+      <div><span>场景</span><b id="d-scene">gate</b></div>
+      <div><span>场景内</span><b id="d-local">0.000s</b></div>
+      <div><span>帧号</span><b id="d-frame">0</b></div>
+      <div><span>FPS</span><b id="d-fps">—</b></div>
+      <div><span>缩放</span><b id="d-scale">—</b></div>
+      <div><span>内部</span><b>640 × 360</b></div>
+      <div><span>时钟</span><b>silent</b></div>
+    </div>
+  </section>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

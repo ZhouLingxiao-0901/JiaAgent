@@ -1,0 +1,55 @@
+# ============================================================
+# 模型供应商清单
+#
+# 换模型、加模型，只改这个文件，不需要改任何 Python 代码。
+# API Key 不写在这里，只写"去哪个环境变量里找"（api_key_env）。
+# ============================================================
+
+# 默认使用哪一家（必须是下面 providers 里的一个名字）
+default: deepseek
+
+providers:
+
+  # ---------------- DeepSeek ----------------
+  deepseek:
+    label: DeepSeek
+    type: openai_compatible
+    base_url: https://api.deepseek.com/v1
+    model: deepseek-chat
+    api_key_env: JIA_DEEPSEEK_API_KEY
+
+  # ---------------- 智谱 GLM ----------------
+  glm:
+    label: 智谱 GLM
+    type: openai_compatible
+    base_url: https://open.bigmodel.cn/api/paas/v4
+    model: glm-4-plus
+    api_key_env: JIA_GLM_API_KEY
+
+  # ---------------- 阿里通义千问 ----------------
+  qwen:
+    label: 通义千问
+    type: openai_compatible
+    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+    model: qwen-plus
+    api_key_env: JIA_QWEN_API_KEY
+
+  # ---------------- OpenAI ----------------
+  openai:
+    label: OpenAI
+    type: openai_compatible
+    base_url: https://api.openai.com/v1
+    model: gpt-4o-mini
+    api_key_env: JIA_OPENAI_API_KEY
+
+  # ---------------- Anthropic Claude ----------------
+  # 阶段一暂不支持：Claude 的消息格式和其它几家不一样，
+  # 需要单独写一个适配器（app/llm/anthropic_adapter.py）。
+  # 写好后把它加进 app/llm/registry.py 的 _ADAPTER_CLASSES 即可。
+  # claude:
+  #   label: Claude
+  #   type: anthropic
+  #   base_url: https://api.anthropic.com
+  #   model: <填一个当前的模型 ID>
+  #   api_key_env: JIA_ANTHROPIC_API_KEY
+  #   enabled: false

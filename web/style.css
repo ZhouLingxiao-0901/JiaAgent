@@ -1,0 +1,526 @@
+/* JiaAgent 界面样式。纯手写，没有引入任何前端框架。 */
+
+:root {
+  --bg: #f5f6f8;
+  --panel: #ffffff;
+  --border: #e3e5ea;
+  --text: #1f2328;
+  --muted: #7b828c;
+  --accent: #2f6feb;
+  --bubble-user: #2f6feb;
+  --bubble-user-text: #ffffff;
+  --bubble-bot: #f0f1f4;
+  --danger: #c0392b;
+  --ok: #1a7f4b;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", system-ui, sans-serif;
+  font-size: 15px;
+}
+
+.app { display: flex; height: 100vh; }
+
+/* ---------------- 左侧边栏 ---------------- */
+.sidebar {
+  width: 240px;
+  flex: 0 0 240px;
+  background: var(--panel);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 14px 12px;
+  gap: 10px;
+}
+
+.brand { font-size: 17px; font-weight: 700; letter-spacing: .5px; }
+.brand-cn { color: var(--accent); margin-left: 4px; }
+
+.new-chat {
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--text);
+  font-size: 14px;
+  cursor: pointer;
+}
+.new-chat:hover { background: #f0f3f9; border-color: var(--accent); }
+
+.session-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 3px; }
+
+.session {
+  padding: 8px 10px;
+  border-radius: 7px;
+  font-size: 13.5px;
+  color: #43474e;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.session:hover { background: #f0f1f4; }
+.session.active { background: #e6edfd; color: var(--accent); font-weight: 600; }
+
+.status {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+  padding-top: 9px;
+}
+.status.warn { color: var(--danger); }
+
+/* ---------------- 右侧聊天区 ---------------- */
+.chat { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+
+.chat-header {
+  height: 54px;
+  flex: 0 0 54px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 18px;
+  gap: 12px;
+}
+.chat-header .title {
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#model-select {
+  max-width: 260px;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--panel);
+  color: var(--text);
+  font-size: 13px;
+}
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.empty { margin: auto; text-align: center; color: var(--muted); }
+.empty h2 { margin: 0 0 8px; font-size: 20px; color: #4a4f57; }
+.empty p { margin: 0; font-size: 14px; }
+
+.msg { display: flex; }
+.msg.user { justify-content: flex-end; }
+
+.bubble {
+  max-width: min(680px, 78%);
+  padding: 10px 14px;
+  border-radius: 14px;
+  line-height: 1.65;
+  white-space: pre-wrap;      /* 保留换行 */
+  word-break: break-word;
+}
+.msg.user .bubble {
+  background: var(--bubble-user);
+  color: var(--bubble-user-text);
+  border-bottom-right-radius: 4px;
+}
+.msg.assistant .bubble {
+  background: var(--bubble-bot);
+  border-bottom-left-radius: 4px;
+}
+.msg.error .bubble {
+  background: #fdecea;
+  color: var(--danger);
+  border: 1px solid #f5c6c0;
+}
+
+/* 模型回复里的行内代码和代码块 */
+.bubble code {
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.92em;
+  background: rgba(0, 0, 0, .07);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+.bubble pre {
+  margin: 8px 0;
+  padding: 10px 12px;
+  background: rgba(0, 0, 0, .06);
+  border-radius: 8px;
+  overflow-x: auto;
+  white-space: pre;
+}
+.bubble pre code { background: none; padding: 0; }
+.msg.user .bubble code { background: rgba(255, 255, 255, .22); }
+.msg.user .bubble pre { background: rgba(0, 0, 0, .18); }
+
+/* 等待回复时的闪烁光标 */
+.bubble.typing::after {
+  content: "▌";
+  margin-left: 1px;
+  animation: blink 1s steps(2, start) infinite;
+}
+@keyframes blink { to { visibility: hidden; } }
+
+/* ---------------- 工具活动卡片 ---------------- */
+.tool-card {
+  align-self: flex-start;
+  max-width: min(680px, 78%);
+  background: #f7f8fa;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--muted);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+.tool-card .tool-head {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 4px;
+  letter-spacing: .3px;
+}
+.tool-card .tool-summary { color: var(--text); word-break: break-word; }
+.tool-card .tool-detail {
+  margin-top: 8px;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 12px;
+  color: var(--muted);
+  background: rgba(0, 0, 0, .04);
+  border-radius: 6px;
+  padding: 6px 8px;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+.tool-card .tool-output {
+  margin: 8px 0 0;
+  padding: 8px 10px;
+  background: rgba(0, 0, 0, .04);
+  border-radius: 6px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 12.5px;
+  color: var(--text);
+}
+.tool-card.running { border-left-color: var(--accent); }
+.tool-card.ok { border-left-color: var(--ok); }
+.tool-card.fail { border-left-color: var(--danger); }
+.tool-card.fail .tool-head { color: var(--danger); }
+.tool-card.expired { opacity: .6; }
+.tool-card.history { border-left-color: var(--muted); opacity: .85; }
+
+.tool-card .tool-actions { margin-top: 10px; display: flex; gap: 8px; }
+.tool-btn {
+  padding: 6px 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 13.5px;
+  cursor: pointer;
+  background: var(--panel);
+  color: var(--text);
+}
+.tool-btn.allow { background: var(--ok); border-color: var(--ok); color: #fff; }
+.tool-btn.deny { background: #fff; border-color: var(--danger); color: var(--danger); }
+.tool-btn:disabled { opacity: .55; cursor: not-allowed; }
+
+/* 候选列表：工具对上了好几个，让用户挑一个 */
+.tool-card .choice-list {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.choice-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 100%;
+  text-align: left;
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--panel);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 13.5px;
+  line-height: 1.45;
+  cursor: pointer;
+}
+.choice-item:hover:not(:disabled) { border-color: var(--accent); background: #f0f3f9; }
+.choice-item:disabled { opacity: .55; cursor: not-allowed; }
+.choice-item.picked { border-color: var(--accent); background: #e6edfd; opacity: 1; }
+.choice-item .choice-name { font-weight: 600; }
+.choice-item .choice-meta {
+  font-size: 12px;
+  color: var(--muted);
+  word-break: break-all;
+}
+
+/* ---------------- 任务面板（自主工作流）---------------- */
+.task-panel {
+  width: 300px;
+  flex: 0 0 300px;
+  background: var(--panel);
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  gap: 10px;
+  overflow-y: auto;
+}
+/* 这一条不能少：上面写了 display:flex，而作者样式优先级高于浏览器默认的
+   [hidden] { display: none }，于是 <aside hidden> 里的 hidden 会完全失效——
+   表现就是"没有任务时右侧也一直空占一条"。必须显式把它盖回来。 */
+.task-panel[hidden] { display: none; }
+.task-panel-head {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-weight: 600;
+  font-size: 14px;
+}
+.task-panel-hint { font-size: 11.5px; font-weight: 400; color: var(--muted); }
+
+.task-list { display: flex; flex-direction: column; gap: 4px; }
+
+.task-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  text-align: left;
+  padding: 7px 9px;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  background: none;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.task-item:hover { background: #f0f1f4; }
+.task-item.active { background: #e6edfd; border-color: #cddbfa; }
+
+.task-badge {
+  flex: 0 0 auto;
+  font-size: 11px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: #eceef2;
+  color: var(--muted);
+}
+.task-badge-running { background: #e6edfd; color: var(--accent); }
+.task-badge-waiting_confirmation { background: #fff3d6; color: #8a6100; }
+.task-badge-succeeded { background: #e3f4ea; color: var(--ok); }
+.task-badge-failed { background: #fdecea; color: var(--danger); }
+.task-badge-paused { background: #fff3d6; color: #8a6100; }
+
+.task-detail { display: flex; flex-direction: column; gap: 8px; }
+.task-detail-title { font-size: 13.5px; font-weight: 600; word-break: break-word; }
+.task-detail-meta { font-size: 12px; color: var(--muted); word-break: break-word; }
+.task-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+.task-actions .tool-btn { padding: 5px 12px; font-size: 12.5px; }
+.task-hint {
+  font-size: 12px;
+  color: #8a6100;
+  background: #fff8e6;
+  border-radius: 6px;
+  padding: 6px 8px;
+}
+
+.task-steps { display: flex; flex-direction: column; gap: 5px; }
+.task-step {
+  border-left: 3px solid var(--muted);
+  background: #f7f8fa;
+  border-radius: 6px;
+  padding: 6px 9px;
+}
+.task-step-goal { font-size: 12.5px; word-break: break-word; }
+.task-step-meta { font-size: 11.5px; color: var(--muted); word-break: break-word; }
+.task-step.step-running { border-left-color: var(--accent); }
+.task-step.step-waiting_confirmation { border-left-color: #d9a300; }
+.task-step.step-succeeded { border-left-color: var(--ok); }
+.task-step.step-failed { border-left-color: var(--danger); }
+.task-step.step-skipped { border-left-color: var(--muted); opacity: .65; }
+
+/* ---------------- 输入区 ---------------- */
+.composer {
+  border-top: 1px solid var(--border);
+  background: var(--panel);
+  padding: 12px 18px 14px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+}
+#input {
+  flex: 1;
+  resize: none;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 1.5;
+  max-height: 180px;
+  outline: none;
+  color: var(--text);
+  background: var(--panel);
+}
+#input:focus { border-color: var(--accent); }
+
+#send {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 15px;
+  cursor: pointer;
+}
+#send:disabled { background: #a9bcec; cursor: not-allowed; }
+
+/* ---------------- 深色模式 ---------------- */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1b1d21;
+    --panel: #24262b;
+    --border: #33363d;
+    --text: #e6e8ea;
+    --muted: #8b929c;
+    --bubble-bot: #2e3138;
+    --danger: #ff8b7d;
+  }
+  .new-chat:hover, .session:hover { background: #2c2f35; }
+  .session { color: #b9bec7; }
+  .session.active { background: #2b3a5c; }
+  .empty h2 { color: #c8ccd3; }
+  .msg.error .bubble { background: #3a2523; border-color: #6b3a33; }
+  .bubble code, .bubble pre { background: rgba(255, 255, 255, .10); }
+  .msg.user .bubble pre { background: rgba(0, 0, 0, .22); }
+  .tool-card { background: #2e3138; }
+  .tool-card .tool-detail, .tool-card .tool-output { background: rgba(255, 255, 255, .06); }
+  .tool-btn.deny { background: #24262b; }
+  .choice-item:hover:not(:disabled) { background: #2c2f35; }
+  .choice-item.picked { background: #2b3a5c; }
+  /* 任务面板 */
+  .task-item:hover { background: #2c2f35; }
+  .task-item.active { background: #2b3a5c; border-color: #3b5080; }
+  .task-badge { background: #33363d; }
+  .task-badge-running { background: #2b3a5c; }
+  .task-badge-succeeded { background: #23402f; }
+  .task-badge-failed { background: #3a2523; }
+  .task-step { background: #2e3138; }
+  .task-hint { background: #3a3320; color: #e0c37a; }
+}
+
+/* ---------------- 屏幕预览（阶段 0）---------------- */
+.chat-header-right { display: flex; align-items: center; gap: 8px; }
+
+.ghost-btn {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--panel);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.ghost-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* 急停：平时是描边按钮，按下后变成实心红，状态一眼可见。 */
+.danger-btn {
+  padding: 6px 12px;
+  border: 1px solid var(--danger);
+  border-radius: 7px;
+  background: var(--panel);
+  color: var(--danger);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.danger-btn:hover { background: #fdecea; }
+.danger-btn.stopped {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: #fff;
+}
+
+.vision-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgba(0, 0, 0, .55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+/* 和 .task-panel 踩过的是同一个坑：作者样式里的 display:flex 会盖掉
+   浏览器默认的 [hidden] { display: none }。不补这一条，弹窗就永远关不掉。 */
+.vision-modal[hidden] { display: none; }
+
+.vision-dialog {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  max-width: 92vw;
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.vision-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.vision-meta {
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: var(--muted);
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 26vh;
+  overflow-y: auto;
+}
+
+.vision-image-wrap {
+  overflow: auto;
+  border-radius: 8px;
+  background: #111;
+  max-height: 60vh;
+}
+.vision-image-wrap img { display: block; max-width: 100%; height: auto; }
+
+.vision-foot { font-size: 12px; color: var(--muted); }
+
+@media (prefers-color-scheme: dark) {
+  .vision-image-wrap { background: #000; }
+}

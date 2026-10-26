@@ -1,0 +1,25 @@
+# 密钥：绝对不能提交
+# .env 及其本地变体（.env.local、.env.production.local 等）
+.env
+.env.*
+# 示例模板必须保留，允许提交
+!.env.example
+
+# 放在项目根目录的密钥笔记
+keys.txt
+
+# 运行时产生的数据
+data/
+logs/
+*.db
+*.log
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# 编辑器
+.vscode/
+.idea/

@@ -1,0 +1,10 @@
+# JiaAgent 依赖清单（刻意保持精简）
+fastapi>=0.115
+uvicorn[standard]>=0.30
+openai>=1.50
+pydantic-settings>=2.4
+PyYAML>=6.0
+python-dotenv>=1.0
+Pillow>=10           # 截图与预览（阶段 0 新增）
+capturekit==0.1.0    # WGC 按 HWND 捕获窗口（来源/版本/SHA256/风险见 docs/capturekit.md）
+numpy>=1.24          # capturekit 的运行时依赖；窗口画面校验也用到

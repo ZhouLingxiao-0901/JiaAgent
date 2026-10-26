@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- 页面只允许内联样式和内联脚本；禁止任何网络连接、图片、字体、
+     表单提交和外部资源。图标用 data:，避免浏览器自动请求 favicon。 -->
+<meta http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src 'none'; font-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<title>佳 Agent 首次真实点击验收页（勿关闭）</title>
+<link rel="icon" href="data:,">
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #0d1117;
+    --panel: #161b22;
+    --line: #30363d;
+    --text: #e6edf3;
+    --muted: #9da7b3;
+    --accent: #f0a020;
+    --accent-strong: #ffb52e;
+    --ok: #3fb950;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    min-height: 100%;
+    margin: 0;
+  }
+
+  body {
+    display: grid;
+    place-items: center;
+    padding: 32px;
+    background:
+      radial-gradient(circle at 50% 0%, #1d2633 0%, var(--bg) 55%);
+    color: var(--text);
+    font-family: "Segoe UI", "Microsoft YaHei UI", "Microsoft YaHei",
+                 system-ui, sans-serif;
+  }
+
+  .card {
+    width: min(760px, 100%);
+    padding: 40px 44px 36px;
+    background: var(--panel);
+    border: 2px solid var(--accent);
+    border-radius: 16px;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55);
+  }
+
+  .eyebrow {
+    display: inline-block;
+    margin: 0 0 16px;
+    padding: 4px 10px;
+    border: 1px solid var(--accent);
+    border-radius: 999px;
+    color: var(--accent-strong);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+
+  h1 {
+    margin: 0 0 12px;
+    font-size: clamp(28px, 4vw, 40px);
+    line-height: 1.2;
+  }
+
+  .lead {
+    margin: 0 0 28px;
+    color: var(--muted);
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  .lead strong { color: var(--text); }
+
+  .target {
+    padding: 24px;
+    background: #0b0f14;
+    border: 1px dashed var(--line);
+    border-radius: 12px;
+    text-align: center;
+  }
+
+  h2 {
+    margin: 0 0 20px;
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  #acceptance-button {
+    display: inline-block;
+    min-width: 320px;
+    padding: 22px 32px;
+    border: 0;
+    border-radius: 12px;
+    background: linear-gradient(180deg, var(--accent-strong), var(--accent));
+    color: #231500;
+    font: inherit;
+    font-size: 22px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(240, 160, 32, 0.25);
+  }
+
+  #acceptance-button:hover { filter: brightness(1.06); }
+
+  #acceptance-button:focus-visible {
+    outline: 3px solid var(--text);
+    outline-offset: 4px;
+  }
+
+  .count {
+    margin: 24px 0 0;
+    color: var(--muted);
+    font-size: 18px;
+  }
+
+  #click-count {
+    display: inline-block;
+    min-width: 3ch;
+    color: var(--ok);
+    font-size: 48px;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    vertical-align: -0.12em;
+  }
+
+  .note {
+    margin: 24px 0 0;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+</style>
+</head>
+<body>
+<main class="card">
+  <p class="eyebrow">验收专用窗口 · 不联网</p>
+  <h1>佳 Agent 首次真实点击验收页</h1>
+  <p class="lead">
+    这个页面只用于验证“屏幕观察 → 用户授权 → 单次左键单击”链路。
+    <strong>它不发送网络请求，不调用佳的接口，不读写文件，也不访问任何外部资源。</strong>
+    点击按钮只会改变下面的计数。
+  </p>
+
+  <section class="target" aria-labelledby="target-title">
+    <h2 id="target-title">测试目标</h2>
+    <button id="acceptance-button" type="button">
+      测试按钮：请单击我一次
+    </button>
+    <p class="count" aria-live="polite">
+      当前点击次数：<strong id="click-count">0</strong>
+    </p>
+  </section>
+
+  <p class="note">
+    验收前计数应为 <strong>0</strong>。每次验收只允许一次左键单击；
+    点击后应变为 <strong>1</strong>。如果计数没有变化或一次变成多个数字，
+    立即停止，不要重试。
+  </p>
+</main>
+
+<script>
+(() => {
+  "use strict";
+
+  let clickCount = 0;
+  const countEl = document.getElementById("click-count");
+  const button = document.getElementById("acceptance-button");
+
+  button.addEventListener("click", () => {
+    clickCount += 1;
+    countEl.textContent = String(clickCount);
+  });
+})();
+</script>
+</body>
+</html>

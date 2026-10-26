@@ -1,0 +1,423 @@
+# ============================================================
+# 工具配置
+#
+# 这个文件决定"佳"能碰你电脑上的哪些东西。
+# 改这里不需要动任何 Python 代码。
+#
+# 安全原则：没写进 allowed_roots 的路径，一律拒绝。
+# ============================================================
+
+# ---------------- 允许打开的应用 ----------------
+# path 是可执行文件的完整路径；商店应用（比如画图）没有 exe 路径，
+# 改用 startfile 写它的启动标识。
+# aliases 是模型和你可以用来指代它的名字，中英文都行。
+apps:
+
+  notepad:
+    label: 记事本
+    path: C:\Windows\System32\notepad.exe
+    process: Notepad.exe
+    aliases: [记事本, notepad, 文本编辑器]
+
+  calc:
+    label: 计算器
+    path: C:\Windows\System32\calc.exe
+    process: CalculatorApp.exe
+    aliases: [计算器, calc, 计算]
+
+  vscode:
+    label: VS Code
+    path: D:\cc-AI\Microsoft VS Code\Code.exe
+    process: Code.exe
+    aliases: [code, vscode, vs code, 编辑器, 代码编辑器]
+
+  edge:
+    label: Edge 浏览器
+    path: C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
+    process: msedge.exe
+    aliases: [edge, 浏览器, 微软浏览器, 上网]
+
+  chrome:
+    label: Chrome 浏览器
+    path: C:\Program Files\Google\Chrome\Application\chrome.exe
+    process: chrome.exe
+    aliases: [chrome, 谷歌浏览器]
+
+  explorer:
+    label: 文件资源管理器
+    path: C:\Windows\explorer.exe
+    process: explorer.exe
+    aliases: [explorer, 资源管理器, 文件夹, 我的电脑, 文件管理器]
+
+  mspaint:
+    label: 画图
+    startfile: mspaint
+    process: mspaint.exe
+    aliases: [画图, mspaint, paint]
+
+  wegame:
+    label: WeGame
+    path: D:\Program Files (x86)\WeGame\wegame.exe
+    process: wegame.exe
+    aliases: [wegame, WeGame, 腾讯游戏平台]
+
+
+# ---------------- 给自动发现的应用补别名 ----------------
+# 上面 apps: 里是"手工点名"的应用，每条自己带 aliases。
+# 这一段是给**佳自己发现来的**应用补别名用的——比如微信是从开始菜单
+# 发现的，你希望敲 "wechat" 也能找到它，就在这里加一条。
+#
+# 为什么不直接在 apps: 里再写一遍？因为那要硬写 exe 路径，软件一升级、
+# 一换目录就失效。这里只认名字，不会失效。
+#
+# 左边是索引里的应用名，右边是随便你怎么叫它。中英文、大小写都能对上。
+aliases:
+
+  微信:
+    - wechat
+    - weixin
+
+  抖音:
+    - douyin
+    - tiktok
+
+  哔哩哔哩:
+    - bilibili
+    - B站
+    - 小破站
+
+
+# ---------------- 路径权限 ----------------
+permissions:
+
+  # 允许访问的目录（白名单）。不在这里面的一律拒绝。
+  # 开头的 ~ 表示你的用户主目录，例如 ~\Desktop 就是桌面。
+  allowed_roots:
+    - D:\
+    - ~\Desktop
+    - ~\Documents
+    - ~\Downloads
+
+  # 即使在白名单里面，这些路径也绝对不许碰
+  blocked_paths:
+    - D:\JiaAgent\.git
+    - D:\JiaAgent\.venv
+    - D:\JiaAgent\.env
+    - D:\JiaAgent\.env.example
+    - D:\JiaAgent\data
+    - ~\AppData
+    - ~\.claude
+    - ~\.ssh
+    - C:\Windows
+
+  # 单个文本文件最多能写多大（字节），防止误写一个巨大的文件
+  max_file_bytes: 200000
+
+  # 列目录时最多返回多少条，防止一个几万文件的目录把回复撑爆
+  max_list_entries: 200
+
+
+# ---------------- 只读文件理解的独立白名单 ----------------
+# read_text_file / search_text_files 只认这一段，**不会**沿用上面的
+# permissions.allowed_roots（那里为了打开应用/列目录可能包含整块磁盘）。
+#
+# 留空 = 什么都不允许读，工具会失败关闭。默认只开放项目目录，不开放
+# 整个用户主目录、桌面或整块磁盘。要读别的地方，请把确切的文件夹加进来，
+# 例如：
+#   - ~\Desktop
+#   - ~\Documents\笔记
+# 然后重启服务。每次读取/搜索仍会弹授权卡片，内容可能发送给模型提供商。
+filesystem:
+
+  allowed_roots:
+    - D:\JiaAgent
+
+  # 即使在 allowed_roots 里，这些位置也绝对不许读。
+  # .env、keys.txt、私钥、凭据文件另有内置名称/目录规则，不只靠这一段。
+  blocked_paths:
+    - D:\JiaAgent\.git
+    - D:\JiaAgent\.venv
+    - D:\JiaAgent\.env
+    - D:\JiaAgent\.env.example
+    - D:\JiaAgent\keys.txt
+    - D:\JiaAgent\data
+    - D:\JiaAgent\logs
+    - ~\AppData
+    - ~\.claude
+    - ~\.ssh
+    - C:\Windows
+
+  # 单次 read_text_file 的源文件大小上限（字节）
+  max_file_bytes: 200000
+
+  # 带行号格式化后的输出上限（字符）
+  max_read_output_chars: 400000
+
+  # 一次 search_text_files 最多检查多少个文件
+  max_search_files: 500
+
+  # 一次搜索最多返回多少处命中
+  max_search_results: 100
+
+  # 搜索时单个文件最多读取多少字节；超过就跳过并报告
+  max_search_file_bytes: 200000
+
+  # 搜索结果正文的总长度上限（字符）
+  max_search_output_chars: 20000
+
+  # 每处命中前后最多带几行上下文（工具参数的上限）
+  max_context_lines: 3
+
+  # 搜索结果里单行最多展示多少字符（超出会明确标注）
+  max_line_chars: 500
+
+  # 搜索关键字最大长度
+  max_query_chars: 200
+
+  # 路径字符串最大长度
+  max_path_chars: 4096
+
+
+# ---------------- Claude Code 人工交接 ----------------
+# 这一阶段不自动启动 CC、不调用 CLI、不安装 SDK。佳只负责：
+#   1. 在用户确认后，把明确授权的只读文件复制到 data/cc-handoff/<task_id>/workspace
+#   2. 生成 task.json / manifest.json，由你手工交给 Claude Code
+#   3. 验证你放回来的 result.json，验证通过才把结论交给模型
+#
+# 这是**独立于 filesystem / permissions** 的白名单。留空表示不允许创建任何
+# 交接任务，工具失败关闭，不会回退到其他白名单。默认关闭。
+#
+# 启用示例（先确认这些目录确实只包含希望给 CC 看的代码）：
+#   enabled: true
+#   allowed_roots:
+#     - D:\JiaAgent\app
+# 然后重启服务。每次准备任务仍会弹确认卡片。
+cc:
+
+  enabled: false
+
+  allowed_roots: []
+
+  # 即使位于 allowed_roots 内，这些位置也绝不复制。敏感文件另有内置规则。
+  blocked_paths:
+    - D:\JiaAgent\.git
+    - D:\JiaAgent\.venv
+    - D:\JiaAgent\.env
+    - D:\JiaAgent\.env.example
+    - D:\JiaAgent\keys.txt
+    - D:\JiaAgent\data
+    - D:\JiaAgent\logs
+    - ~\AppData
+    - ~\.claude
+    - ~\.ssh
+    - C:\Windows
+
+  # 一次任务最多复制多少个文件
+  max_files: 200
+
+  # 所有文件的总字节上限
+  max_total_bytes: 2000000
+
+  # 单个源文件的字节上限（超过会失败关闭，不会悄悄跳过）
+  max_file_bytes: 200000
+
+  # result.json 的字节上限
+  max_result_bytes: 100000
+
+  # 模型一次最多能指定多少个路径
+  max_paths: 20
+
+  # 分析目标描述的最大字符数
+  max_goal_chars: 4000
+
+  # task.json 的截止时间（小时，由服务端计算，模型不能指定）
+  deadline_hours: 24
+
+
+# ============================================================
+# 应用自动发现
+#
+# 上面 apps: 里是"手工点名"的应用。这一段让佳自己去找这台电脑上
+# 还装了哪些程序（开始菜单、注册表、商店应用），不用你一个个手写。
+#
+# ⚠️ 改完这个文件要重启服务才生效（配置是启动时读一次就记住了）。
+# ============================================================
+discovery:
+
+  enabled: true
+
+  # 服务启动时要不要自动刷新索引。
+  # 默认 false：启动保持快。索引过期了会在第一次用到时顺手刷新。
+  refresh_on_startup: false
+
+  # 索引超过多少小时算"过期"。设 0 表示从不自动刷新，只在你手动刷新时才更新。
+  stale_after_hours: 24
+
+  # 扫描安装目录的深度。2 表示"软件目录/子目录"两层，不做全盘递归。
+  scan_depth: 2
+
+  # 各个来源的开关。不想让某一类应用进索引，就把对应项改成 false。
+  sources:
+    start_menu: true      # 开始菜单快捷方式（最准，建议留着）
+    app_paths: true       # 注册表里按 exe 名注册的路径
+    uninstall: true       # 卸载注册表里记录的安装位置
+    install_dirs: true    # 扫描下面 extra_scan_dirs 列出的目录
+    uwp: true             # 商店应用
+    manual: true          # 上面 apps: 里手工配置的
+
+  # 额外要扫描的软件目录。**不会**递归整个 C 盘和 D 盘，
+  # 只扫这里列出的目录，外加自动附带的 %LOCALAPPDATA%\Programs。
+  extra_scan_dirs:
+    - D:\cc-AI
+
+  # 索引条数上限，兜底用，防止某个来源失控。
+  max_entries: 2000
+
+
+# ============================================================
+# 自主工作流
+#
+# 让佳能把一句复杂的话拆成有顺序的步骤，先给你过目，你点头之后在后台
+# 一步一步执行——每一步都看真实结果再决定下一步，全程可以暂停/恢复/取消。
+#
+# 注意：高风险操作（打开应用、写文件）**依然**会在执行前弹授权卡片问你，
+# 这一套流程没有、也不会绕过那个确认。
+# ============================================================
+workflow:
+
+  enabled: true
+
+  # 一个计划最多拆几步。步数越多，模型越容易跑偏，你也越懒得看。
+  max_steps: 8
+
+  # 执行过程中最多允许改几次计划。改太多次说明这事它压根做不了。
+  max_replans: 3
+
+  # 每跑完一步要不要都问一次模型下一步怎么办。
+  #   always     —— 每步都问，最贴合"根据真实结果决定下一步"，但更费调用
+  #   on_failure —— 成功的步骤直接往下走，只在失败时才问，省钱
+  decide_mode: always
+
+  # 等你点"确认/答复"最多等多少秒。超时就按"没答应"处理（不执行），
+  # 绝不会因为你没看屏幕就自己往下做。
+  confirm_timeout_seconds: 1800
+
+  # 你没明说"帮我规划"的时候，佳要不要自己判断"这句话是个多步任务"。
+  # 关掉的话，只有你说「规划」「分几步」这类词才会进工作流。
+  auto_start: true
+
+
+# ============================================================
+# 启动安全
+# ============================================================
+security:
+
+  # 允不允许你手工提供一个路径来打开程序。
+  # 允许的话，那个路径仍要过"路径白名单 + 危险程序黑名单 + 每次确认"三道关。
+  allow_manual_path: true
+
+  # 额外追加的"绝对不许启动"的程序名（只加不减）。
+  # 内置已经挡掉了 cmd / powershell / regedit / 各类卸载程序等一大票，
+  # 这里只用来补充你自己的顾虑。写了不会让内置清单变短。
+  blocked_executables: []
+
+# ============================================================
+# 真实鼠标输入（默认关闭）
+#
+# 这是双重启用条件里的第一道。即使这里改成 true，还必须同时设置
+# 环境变量 JIA_ENABLE_REAL_MOUSE=1，真实后端才会被构造；两者缺一，
+# click_element 都会在确认之前失败关闭。
+#
+# 不支持通过网页或模型修改这里的值；改完要重启服务才生效。
+# 速率限制是硬上限，只能调得更慢，不能更快。
+# ============================================================
+input:
+
+  real_mouse_enabled: false
+
+  # 两次真实点击至少间隔多少秒（不会低于 1 秒）
+  min_click_interval_seconds: 1.0
+
+  # 每分钟最多执行多少次真实点击（不会高于 5 次）
+  max_clicks_per_minute: 5
+
+
+# ============================================================
+# 屏幕感知（只看，不动）
+#
+# 能做：按应用窗口（Windows Graphics Capture）或整个桌面截图，交给视觉模型分析。
+# **没有任何鼠标键盘操作**，也不会在后台录屏。
+#
+# 默认范围是 auto：最近使用过的、不是佳自己的那个应用窗口。
+# 只有明确要求看整个桌面时才用 desktop。
+#
+# 截图默认**不落盘**：只在内存里，分析完就丢。
+# ============================================================
+vision:
+
+  # 总开关。关掉之后 /api/vision/* 一律拒绝。
+  enabled: true
+
+  # 预览图最长边（像素）。只影响网页上显示的那张图，
+  # 不改截图本身的分辨率，也不参与任何坐标计算。
+  preview_max_side: 1600
+
+  # 窗口列表最多返回多少条，防止一次吐太多。
+  max_windows: 200
+
+  # ---- 阶段 1：视觉分析 ----
+  # 用哪个模型看图。留空 = 用 models.yaml 里的默认模型（当前 deepseek/deepseek-chat）。
+  # 以后换千问、GLM：在 models.yaml 加一条 provider，把这里改成那个名字即可，
+  # 视觉分析模块一行代码都不用改。
+  provider: ""
+
+  # 送给视觉模型的图最长边。只影响分析，不影响网页上的截图预览。
+  max_side: 1280
+
+  # jpeg 体积小、上传快；png 更清晰但大很多。
+  image_format: jpeg
+  jpeg_quality: 85
+
+  # 推理模型（如 deepseek-flash）会先输出思考内容，给小了正文会是空的。
+  max_tokens: 2000
+
+  # 最多解析多少个界面元素，防止回复被撑爆。
+  max_elements: 20
+
+  # 一条可信观察记录的有效期（秒）。截图和分析完成后，服务端会把窗口矩形、
+  # 截图尺寸、DPI 和元素坐标绑定成一条记录。超过这个时间，后续坐标校验
+  # 一律拒绝并要求重新观察——窗口很可能已经变了，旧坐标不能再信。
+  observation_ttl_seconds: 30
+
+  # ---- 窗口捕获（Windows Graphics Capture / capturekit 0.1.0）----
+  # 依赖的来源、版本、SHA256 和 Alpha 风险见 docs/capturekit.md。
+  # 注意：这一版不会用 PrintWindow，也不会在窗口捕获失败时退回整桌截图。
+
+  # 等一帧画面最多多少秒。
+  capture_timeout_seconds: 3.0
+
+  # 「最近使用的窗口」有效期（秒）。超时后 auto 会拒绝截图并要求你重新发起，
+  # 而不是改抓另一个窗口。
+  focus_ttl_seconds: 120
+
+  # 后台追踪前台窗口的间隔（秒）。只读窗口元数据，不截图。
+  focus_poll_seconds: 1.0
+
+  # 佳自己的聊天页面按标题识别。**不要写得太宽**：
+  # 例如只写 "JiaAgent" 会把标题为
+  # "JiaAgent MVP 项目架构 - Visual Studio Code" 的正常编辑器也排除掉。
+  jia_title_patterns:
+    - "JiaAgent 佳"
+    - "localhost:8000"
+    - "127.0.0.1:8000"
+
+  # 佳自身界面的进程名（精确匹配，例如将来桌面客户端的 jiaagent.exe）。
+  # 不要写 electron.exe：其他正常应用也可能用 Electron。
+  jia_process_names: []
+
+  # ---- 捕获结果的基本有效性检查 ----
+  # 全黑、可疑单色、颜色过少都不算成功；宁可报错，也不把无效画面当结果。
+  max_black_ratio: 0.98
+  max_uniform_ratio: 0.995
+  min_distinct_colors: 3
+  validate_sample_side: 128
